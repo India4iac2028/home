@@ -231,39 +231,68 @@ body::before {
                     i++;
                     setTimeout(typing, speed);
                 } else if (callback) {
-                    setTimeout(callback, 3000); 
+                    setTimeout(callback, 2000); 
                 }
             }
             typing();
         }
 
-        playButton.addEventListener("click", function() {
-            playButton.style.display = "none"; 
+        // playButton.addEventListener("click", function() {
+        //     playButton.style.display = "none"; 
 
-            let centerX = window.innerWidth / 2;
-            let centerY = window.innerHeight / 2;
-            createConfetti(centerX, centerY);
+        //     let centerX = window.innerWidth / 2;
+        //     let centerY = window.innerHeight / 2;
+        //     createConfetti(centerX, centerY);
 
-            startFallingConfetti(); 
+        //     startFallingConfetti(); 
 
-            setTimeout(() => {
-                welcomeText.style.display = "block"; 
-                welcomeText.classList.add("fade-in");
-                typeWriterEffect("WELCOME TO INDIAN SPACE INDUSTRY E-CATALOGUE", welcomeText, 50, () => {
+        //     setTimeout(() => {
+        //         welcomeText.style.display = "block"; 
+        //         welcomeText.classList.add("fade-in");
+        //         typeWriterEffect("WELCOME TO INDIAN SPACE INDUSTRY E-CATALOGUE", welcomeText, 50, () => {
                     
-                    setTimeout(() => {
-                        welcomeText.classList.add("fade-out");
+        //             setTimeout(() => {
+        //                 welcomeText.classList.add("fade-out");
                         
-                        setTimeout(() => {
-                            welcomeText.style.display = "none";
-                            redirectButton.style.display = "block"; 
-                            redirectButton.classList.add("fade-in-button");
-                        }, 2000);
+        //                 setTimeout(() => {
+        //                     welcomeText.style.display = "none";
+        //                     redirectButton.style.display = "block"; 
+        //                     redirectButton.classList.add("fade-in-button");
+        //                 }, 2000);
                         
-                    }, 3000);
-                });
-            }, 2000); 
+        //             }, 3000);
+        //         });
+        //     }, 2000); 
+        // });
+
+        playButton.addEventListener("click", function() {
+    playButton.style.display = "none"; 
+
+    let centerX = window.innerWidth / 2;
+    let centerY = window.innerHeight / 2;
+    createConfetti(centerX, centerY);
+
+    startFallingConfetti(); 
+
+    setTimeout(() => {
+        welcomeText.style.display = "block"; 
+        welcomeText.classList.add("fade-in");
+        typeWriterEffect("WELCOME TO INDIAN SPACE INDUSTRY E-CATALOGUE", welcomeText, 50, () => {
+            
+            setTimeout(() => {
+                welcomeText.classList.add("fade-out");
+
+                setTimeout(() => {
+                    welcomeText.style.display = "none";
+                    redirectButton.style.display = "block"; 
+                    redirectButton.classList.add("fade-in-button");
+                }, 2000); // Button appears after fade-out animation
+
+            }, 1000); // Reduced delay from 5s to 3s before fading out
         });
+    }, 2000);
+});
+
 
         redirectButton.addEventListener("click", function() {
             window.location.href = "https://indspacehub.com/"; 
