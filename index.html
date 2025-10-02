@@ -21,7 +21,6 @@
     color:#fff;
   }
 
-  /* optional background image (keeps your reference) */
   body::before{
     content:"";
     position:absolute; inset:0;
@@ -45,18 +44,6 @@
     from{ transform: scale(0.6); opacity:0.15; }
     to{ transform: scale(1.3); opacity:1; }
   }
-
-  /* Begin button */
-  #playButton{
-    z-index:10;
-    border:0; cursor:pointer;
-    padding:14px 36px; font-size:18px; font-weight:700; letter-spacing:1px;
-    color:#fff; border-radius:999px;
-    background:linear-gradient(135deg,var(--accent1), #5c4bff);
-    box-shadow: 0 10px 30px rgba(89,75,255,0.18);
-    transition: transform .22s ease, box-shadow .22s ease;
-  }
-  #playButton:hover{ transform: translateY(-4px) scale(1.03); box-shadow: 0 18px 40px rgba(89,75,255,0.30); }
 
   /* Welcome text */
   #welcomeText{
@@ -82,7 +69,7 @@
   }
   #redirectButton:hover{ transform:translateY(-3px); box-shadow: 0 18px 40px rgba(255,99,71,0.28); }
 
-  /* Confetti (kept similar to your orig) */
+  /* Confetti */
   .confetti{ position:absolute; border-radius:0%; opacity:.95; animation: confetti-explode 1s ease-out forwards; filter: drop-shadow(0 0 8px rgba(255,255,255,0.08)); }
   @keyframes confetti-explode { from{ transform:translate(0,0) scale(1); } to{ transform:translate(var(--x),var(--y)) scale(.2); opacity:0; } }
   .falling-confetti{ position:absolute; border-radius:0%; top:-12vh; opacity:.95; animation: confetti-fall linear infinite; filter: drop-shadow(0 0 6px rgba(255,255,255,0.05)); }
@@ -93,8 +80,8 @@
     position:absolute;
     height:3px;
     width: var(--length,160px);
-    background: linear-gradient(270deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.25) 40%, rgba(255,255,255,0) 100%);
-    transform-origin: 0 50%; /* left end is the "head" */
+    background: linear-gradient(to left, rgba(255,255,255,1) 0%, rgba(255,255,255,0.25) 40%, rgba(255,255,255,0) 100%);
+    transform-origin: 0 50%;
     transform: rotate(var(--angle,0rad)) translateX(0);
     filter: drop-shadow(0 0 8px rgba(255,255,255,0.9));
     will-change: transform, opacity;
@@ -116,28 +103,23 @@
     box-shadow: 0 0 12px rgba(255,255,255,0.95), 0 0 26px rgba(255,255,255,0.35);
   }
 
-  /* small responsive tweak */
   @media (max-width:520px){
     #welcomeText{ font-size:26px; }
-    #playButton{ padding:12px 26px; font-size:16px; }
   }
 </style>
 </head>
 <body>
 
   <div class="stars"></div>
-
-  <button id="playButton">BEGIN</button>
   <div id="welcomeText"></div>
-  <button id="redirectButton">ENTER SITE</button>
+  <button id="redirectButton">ENTER THE WEBSITE</button>
 
 <script>
-  const playButton = document.getElementById('playButton');
   const welcomeText = document.getElementById('welcomeText');
   const redirectButton = document.getElementById('redirectButton');
   const starsContainer = document.querySelector('.stars');
 
-  /* --- Twinkling stars (background) --- */
+  /* --- Twinkling stars --- */
   function createStars(count = 160){
     for(let i=0;i<count;i++){
       const s = document.createElement('div');
@@ -153,25 +135,15 @@
     }
   }
 
-  /* --- Accurate shooting stars:
-       compute random start/end, angle and distance, animate using CSS variables
-  --- */
+  /* --- Shooting stars --- */
   function createShootingStarOnce(startX, startY, endX, endY, duration = 1){
     const s = document.createElement('div');
     s.className = 'shooting-star';
-
-    // compute vector
     const dx = endX - startX;
     const dy = endY - startY;
     const distance = Math.hypot(dx, dy);
-
-    // angle in radians (used directly in CSS var)
     const angle = Math.atan2(dy, dx);
-
-    // tail length (visual only)
     const length = Math.min(380, Math.max(80, distance * 0.45));
-
-    // set starting position and css variables
     s.style.left = startX + 'px';
     s.style.top  = startY + 'px';
     s.style.width = length + 'px';
@@ -179,39 +151,27 @@
     s.style.setProperty('--angle', angle + 'rad');
     s.style.setProperty('--duration', duration + 's');
     s.style.setProperty('--length', length + 'px');
-
-    // bright head
     const head = document.createElement('span');
     head.className = 'head';
     s.appendChild(head);
-
     document.body.appendChild(s);
-
-    // remove after animation completes (give a small buffer)
     setTimeout(() => s.remove(), Math.max(1200, duration*1000 + 300));
   }
-
-  // convenience: make a star with random sensible starts/ends
   function spawnRandomShootingStar(){
-    // choose a start in the top half, end in lower half for a nice downward slant
     const startX = Math.random() * window.innerWidth * 0.85;
     const startY = Math.random() * window.innerHeight * 0.35 + 10;
     const endX = Math.random() * window.innerWidth * 0.9;
     const endY = window.innerHeight * (0.55 + Math.random()*0.4);
-
-    // random duration for natural variance
     const dur = 0.7 + Math.random()*0.9;
     createShootingStarOnce(startX, startY, endX, endY, dur);
   }
-
-  // create several shooting stars staggered
   function createShootingStars(count = 5, stagger = 350){
     for(let i=0;i<count;i++){
       setTimeout(spawnRandomShootingStar, i * stagger + Math.random()*200);
     }
   }
 
-  /* --- Confetti and falling confetti (kept similar to your original) --- */
+  /* --- Confetti --- */
   function createConfetti(x,y){
     for(let i=0;i<80;i++){
       const el = document.createElement('div');
@@ -232,7 +192,6 @@
       setTimeout(()=>el.remove(), 1100 + Math.random()*400);
     }
   }
-
   function startFallingConfetti(){
     return setInterval(()=>{
       const colors = ['#ff6f61','#ffd54f','#6a5acd','#00d4a6','#3da4ff'];
@@ -246,7 +205,7 @@
         f.style.background = colors[Math.floor(Math.random()*colors.length)];
         f.style.animationDuration = dur + 's';
         document.body.appendChild(f);
-        setTimeout(()=>f.remove(), dur*1000 + 300);
+        setTimeout(()=>f.remove(), dur*1000 + 3000);
       }
     }, 360);
   }
@@ -261,28 +220,18 @@
     })();
   }
 
-  /* --- Hook the Begin button --- */
-  playButton.addEventListener('click', ()=>{
-    playButton.style.display = 'none';
-
+  /* --- Auto-start sequence --- */
+  window.onload = ()=>{
+    createStars(150);
     const cx = window.innerWidth/2;
     const cy = window.innerHeight/2;
-
-    // confetti burst center
     createConfetti(cx, cy);
-
-    // falling confetti loop
     const confettiInterval = startFallingConfetti();
-
-    // shooting stars accurate angle & path
     createShootingStars(6, 380);
-
-    // reveal welcome text
     setTimeout(()=>{
       welcomeText.style.display = 'block';
       welcomeText.classList.add('fade-in');
-      typeWriterEffect('WELCOME TO INDIA IAC 2028', welcomeText, 60, ()=>{
-        // fade out & show redirect
+      typeWriterEffect('WELCOME TO INDIA FOR IAC 2028', welcomeText, 60, ()=>{
         setTimeout(()=>{
           welcomeText.classList.remove('fade-in');
           welcomeText.classList.add('fade-out');
@@ -290,27 +239,16 @@
             welcomeText.style.display='none';
             redirectButton.style.display = 'inline-block';
             redirectButton.classList.add('fade-in');
-            // keep confetti briefly then stop falling confetti
             setTimeout(()=>clearInterval(confettiInterval), 2500);
           }, 900);
         }, 1400);
       });
     }, 900);
-  });
+  };
 
   redirectButton.addEventListener('click', ()=> {
     window.location.href = "https://india4iac2028.com/";
   });
-
-  // start twinkling stars immediately
-  createStars(150);
-
-  // (optional) if you want shooting stars randomly over time uncomment below:
-  // setInterval(()=>{ if(Math.random()<0.25) createShootingStars(1,0) }, 2500);
-
-  // handle resize (small adaptive fix)
-  window.addEventListener('resize', ()=>{ /* stars will remain fine; you can optionally re-create */ });
-
 </script>
 </body>
 </html>
